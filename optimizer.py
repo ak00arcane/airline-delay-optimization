@@ -5,11 +5,12 @@ def optimize(df, capacity):
     
     model = pulp.LpProblem("Delay_Optimization", pulp.LpMinimize)
     
-    delay_vars = pulp.LpVariable.dicts("delay", flights, 0, 120)
+    delay_vars = pulp.LpVariable.dicts("delay", flights, 5, 120)
     
     # Objective
     model += pulp.lpSum([
-        delay_vars[i] * df.loc[i, 'predicted_delay'] for i in flights
+        delay_vars[i] * df.loc[i, 'predicted_delay'] + 0.1 * delay_vars[i]
+        for i in flights
     ])
     
     # Capacity constraint
